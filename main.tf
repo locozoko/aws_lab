@@ -105,7 +105,7 @@ EOF
 # Create X CC VMs per cc_count which will span equally across designated availability zones per az_count
 # E.g. cc_count set to 4 and az_count set to 2 or byo_subnet_ids configured for 2 will create 2x CCs in AZ subnet 1 and 2x CCs in AZ subnet 2
 module "cc-vm" {
-  source              = "modules/terraform-zscc-aws"
+  source              = "github.com/locozoko/zscc_tf_lab/tree/main/modules/terraform-zscc-aws"
   cc_count            = var.cc_count
   name_prefix         = var.name_prefix
   resource_tag        = random_string.suffix.result
@@ -124,7 +124,7 @@ module "cc-vm" {
 # 3. Create GWLB in all CC subnets. Create 1x GWLB Endpoint per subnet with Endpoint Service. Create Target Group and attach primary service IP from all created Cloud
 #    Connectors as registered targets.
 module "gwlb" {
-  source                    = "modules/terraform-zsgwlb-aws"
+  source                    = "github.com/locozoko/zscc_tf_lab/tree/main/modules/terraform-zsgwlb-aws"
   name_prefix               = var.name_prefix
   resource_tag              = random_string.suffix.result
   global_tags               = local.global_tags
@@ -146,7 +146,7 @@ module "gwlb" {
 
 # 4. Create Endpoint Service associated with GWLB and 1x GWLB Endpoint per CC subnet
 module "gwlb-endpoint" {
-  source                  = "modules/terraform-zsgwlbendpoint-aws"
+  source                  = "github.com/locozoko/zscc_tf_lab/tree/main/modules/terraform-zsgwlbendpoint-aws"
   name_prefix             = var.name_prefix
   resource_tag            = random_string.suffix.result
   global_tags             = local.global_tags
