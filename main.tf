@@ -113,7 +113,6 @@ module "cc_vm" {
   ]
 }
 
-
 ################################################################################
 # 3. Create IAM Policy, Roles, and Instance Profiles to be assigned to CC. 
 #    Default behavior will create 1 of each IAM resource per CC VM. Set variable 
@@ -155,66 +154,6 @@ module "cc_sg" {
   byo_service_security_group_id = var.byo_service_security_group_id
   # optional inputs. only required if byo_security_group set to true
 }
-
-
-################################################################################
-# 5. Create GWLB in all CC subnets/availability zones. Create a Target Group 
-#    and attach primary service IP from all created CCs as registered targets.
-################################################################################
-module "gwlb" {
-  source                   = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-gwlb-aws"
-  name_prefix              = var.name_prefix
-  resource_tag             = random_string.suffix.result
-  global_tags              = local.global_tags
-  vpc_id                   = module.network.vpc_id
-  cc_subnet_ids            = module.network.cc_subnet_ids
-  cc_small_service_ips     = module.cc_vm.cc_service_private_ip
-  cc_med_lrg_service_1_ips = module.cc_vm.cc_med_lrg_service_1_private_ip
-  cc_med_lrg_service_2_ips = module.cc_vm.cc_med_lrg_service_2_private_ip
-  cc_lrg_service_3_ips     = module.cc_vm.cc_lrg_service_3_private_ip
-  cc_instance_size         = var.cc_instance_size
-  http_probe_port          = var.http_probe_port
-  health_check_interval    = var.health_check_interval
-  healthy_threshold        = var.healthy_threshold
-  unhealthy_threshold      = var.unhealthy_threshold
-  cross_zone_lb_enabled    = var.cross_zone_lb_enabled
-}
-
-
-################################################################################
-# 6. Create a VPC Endpoint Service associated with GWLB and 1x GWLB Endpoint 
-#    per Cloud Connector subnet/availability zone.
-################################################################################
-module "gwlb_endpoint" {
-  source              = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-gwlbendpoint-aws"
-  name_prefix         = var.name_prefix
-  resource_tag        = random_string.suffix.result
-  global_tags         = local.global_tags
-  vpc_id              = module.network.vpc_id
-  subnet_ids          = module.network.cc_subnet_ids
-  gwlb_arn            = module.gwlb.gwlb_arn
-  acceptance_required = var.acceptance_required
-  allowed_principals  = var.allowed_principals
-}
-
-
-################################################################################
-# 7. Create Route 53 Resolver Rules and Endpoints for utilization with DNS 
-#    redirection to facilitate Cloud Connector ZPA service.
-#    This can optionally be enabled/disabled per variable "zpa_enabled".
-################################################################################
-module "route53" {
-  count          = var.zpa_enabled == true ? 1 : 0
-  source         = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-route53-aws"
-  name_prefix    = var.name_prefix
-  resource_tag   = random_string.suffix.result
-  global_tags    = local.global_tags
-  vpc_id         = module.network.vpc_id
-  r53_subnet_ids = module.network.route53_subnet_ids
-  domain_names   = var.domain_names
-  target_address = var.target_address
-}
-
 
 ################################################################################
 # Validation for Cloud Connector instance size and EC2 Instance Type 

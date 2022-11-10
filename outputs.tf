@@ -31,15 +31,6 @@ ${join("\n", module.cc_vm.cc_lrg_service_3_private_ip)}
 All CC Primary Service ENIs:
 ${join("\n", module.cc_vm.service_eni_1)}
 
-All GWLB Endpoint IDs:
-${join("\n", module.gwlb_endpoint.gwlbe)}
-
-GWLB Endpoint Service Name:
-${module.gwlb_endpoint.vpce_service_name}
-
-GWLB:
-${module.gwlb.gwlb_arn}
-
 All CC IAM Role ARNs (Please provide this to Zscaler for callhome enablement):
 ${join("\n", module.cc_iam.iam_instance_profile_arn)}
 

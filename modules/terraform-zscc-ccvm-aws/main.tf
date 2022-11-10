@@ -50,28 +50,28 @@ resource "aws_instance" "cc_vm" {
 # Create Cloud Connector Service Interface for Small CC. 
 # This interface becomes LB0 interface for Medium/Large size CCs
 ################################################################################
-resource "aws_network_interface" "cc_vm_nic_index_1" {
-  count             = local.valid_cc_create ? var.cc_count : 0
-  description       = var.cc_instance_size == "small" ? "Primary Interface for service traffic" : "CC Med/Lrg LB interface"
-  subnet_id         = element(var.service_subnet_id, count.index)
-  security_groups   = [element(var.service_security_group_id, count.index)]
-  source_dest_check = false
-  private_ips_count = 1
-  attachment {
-    instance     = aws_instance.cc_vm[count.index].id
-    device_index = 1
-  }
+#resource "aws_network_interface" "cc_vm_nic_index_1" {
+#  count             = local.valid_cc_create ? var.cc_count : 0
+#  description       = var.cc_instance_size == "small" ? "Primary Interface for service traffic" : "CC Med/Lrg LB interface"
+#  subnet_id         = element(var.service_subnet_id, count.index)
+#  security_groups   = [element(var.service_security_group_id, count.index)]
+#  source_dest_check = false
+#  private_ips_count = 1
+#  attachment {
+#    instance     = aws_instance.cc_vm[count.index].id
+#    device_index = 1
+#  }
 
-  tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-${var.resource_tag}-SrvcIF1" }
-  )
-}
+#  tags = merge(var.global_tags,
+#    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-${var.resource_tag}-SrvcIF1" }
+#  )
+#}
 
 # Get Data info of NIC to be able to output private IP values
-data "aws_network_interface" "cc_vm_nic_index_1_eni" {
-  count = local.valid_cc_create ? var.cc_count : 0
-  id    = element(aws_network_interface.cc_vm_nic_index_1.*.id, count.index)
-}
+#data "aws_network_interface" "cc_vm_nic_index_1_eni" {
+#  count = local.valid_cc_create ? var.cc_count : 0
+#  id    = element(aws_network_interface.cc_vm_nic_index_1.*.id, count.index)
+#w}
 
 
 ################################################################################

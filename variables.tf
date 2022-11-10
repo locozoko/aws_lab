@@ -145,30 +145,6 @@ variable "reuse_iam" {
   default     = false
 }
 
-variable "health_check_interval" {
-  type        = number
-  description = "Interval for GWLB target group health check probing, in seconds, of Cloud Connector targets. Minimum 5 and maximum 300 seconds"
-  default     = 10
-}
-
-variable "healthy_threshold" {
-  type        = number
-  description = "The number of successful health checks required before an unhealthy target becomes healthy. Minimum 2 and maximum 10"
-  default     = 3
-}
-
-variable "unhealthy_threshold" {
-  type        = number
-  description = "The number of unsuccessful health checks required before an healthy target becomes unhealthy. Minimum 2 and maximum 10"
-  default     = 3
-}
-
-variable "cross_zone_lb_enabled" {
-  type        = bool
-  description = "Determines whether GWLB cross zone load balancing should be enabled or not"
-  default     = false
-}
-
 variable "zpa_enabled" {
   type        = bool
   default     = false
@@ -193,24 +169,6 @@ variable "workloads_enabled" {
   type        = bool
   default     = false
   description = "Configure Workload Subnets, Route Tables, and associations if set to true"
-}
-
-variable "gwlb_enabled" {
-  type        = bool
-  default     = true
-  description = "Default is true. Workload/Route 53 subnet route tables will point to vpc_endpoint_id via var.gwlb_endpoint_ids input. If false, these Route Tables will point to network_interface_id via var.cc_service_enis"
-}
-
-variable "acceptance_required" {
-  type        = bool
-  description = "Whether to require manual acceptance of any VPC Endpoint registration attempts to the Endpoint Service or not. Default is false"
-  default     = false
-}
-
-variable "allowed_principals" {
-  type        = list(string)
-  description = "List of AWS Principal ARNs who are allowed access to the GWLB Endpoint Service. E.g. [\"arn:aws:iam::1234567890:root\"]`. See https://docs.aws.amazon.com/vpc/latest/privatelink/configure-endpoint-service.html#accept-reject-connection-requests"
-  default     = []
 }
 
 # BYO (Bring-your-own) variables list
