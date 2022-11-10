@@ -78,7 +78,6 @@ data "aws_internet_gateway" "selected" {
 
 # Or reference existing NAT Gateways
 data "aws_nat_gateway" "selected" {
-  count = var.byo_ngw == length(var.byo_ngw_ids)
   id = var.byo_ngw == element(var.byo_ngw_ids, count.index)
 }
 
@@ -88,7 +87,6 @@ data "aws_nat_gateway" "selected" {
 
 # Or reference existing subnets
 data "aws_subnet" "cc-selected" {
-count = var.byo_subnets == length(var.byo_subnet_ids)
 id = var.byo_subnets == element(var.byo_subnet_ids, count.index)
 }
 
