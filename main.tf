@@ -67,10 +67,6 @@ module "network" {
   byo_vpc_id     = var.byo_vpc_id
   byo_subnets    = var.byo_subnets
   byo_subnet_ids = var.byo_subnet_ids
-  byo_igw        = var.byo_igw
-  byo_igw_id     = var.byo_igw_id
-  byo_ngw        = var.byo_ngw
-  byo_ngw_ids    = var.byo_ngw_ids
 }
 
 
