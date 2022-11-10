@@ -61,7 +61,7 @@ data "aws_vpc" "vpc_selected" {
 #}
 
 # Create 1 NAT Gateway per Public Subnet.
-#resource "aws_nat_gateway" "ngw" {
+resource "aws_nat_gateway" "ngw" {
 #  count         = var.byo_ngw == false ? length(aws_subnet.public_subnet.*.id) : 0
 #  allocation_id = aws_eip.eip.*.id[count.index]
 #  subnet_id     = aws_subnet.public_subnet.*.id[count.index]
@@ -83,16 +83,16 @@ data "aws_vpc" "vpc_selected" {
 # Public (NAT Gateway) Subnet & Route Tables
 ################################################################################
 # Create equal number of Public/NAT Subnets to how many Cloud Connector subnets exist. This will not be created if var.byo_ngw is set to True
-#resource "aws_subnet" "public_subnet" {
-#  count             = var.byo_ngw == false ? length(data.aws_subnet.cc_subnet_selected.*.id) : 0
-#  availability_zone = data.aws_availability_zones.available.names[count.index]
-#  cidr_block        = var.public_subnets != null ? element(var.public_subnets, count.index) : cidrsubnet(data.aws_vpc.vpc_selected.cidr_block, 8, count.index + 101)
-#  vpc_id            = data.aws_vpc.vpc_selected.id
+resource "aws_subnet" "public_subnet" {
+  count             = var.byo_ngw == false ? length(data.aws_subnet.cc_subnet_selected.*.id) : 0
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  cidr_block        = var.public_subnets != null ? element(var.public_subnets, count.index) : cidrsubnet(data.aws_vpc.vpc_selected.cidr_block, 8, count.index + 101)
+  vpc_id            = data.aws_vpc.vpc_selected.id
 
-#  tags = merge(var.global_tags,
-#    { Name = "${var.name_prefix}-public-subnet-${count.index + 1}-${var.resource_tag}" }
-#  )
-#}
+  tags = merge(var.global_tags,
+    { Name = "${var.name_prefix}-public-subnet-${count.index + 1}-${var.resource_tag}" }
+  )
+}
 
 
 # Create a public Route Table towards IGW. This will not be created if var.byo_ngw is set to True
@@ -166,7 +166,7 @@ resource "aws_subnet" "cc_subnet" {
   count = var.byo_subnets == false ? var.az_count : 0
 
   availability_zone = data.aws_availability_zones.available.names[count.index]
-  cidr_block        = var.cc_subnets != null ? element(var.cc_subnets, count.index) : cidrsubnet(data.aws_vpc.vpc_selected.cidr_block, 8, count.index + 200)
+  cidr_block        = var.cc_subnets != null ? element(var.cc_subnets, coun`t.index) : cidrsubnet(data.aws_vpc.vpc_selected.cidr_block, 8, count.index + 200)
   vpc_id            = data.aws_vpc.vpc_selected.id
 
   tags = merge(var.global_tags,
