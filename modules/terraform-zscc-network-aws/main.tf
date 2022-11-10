@@ -162,17 +162,17 @@ resource "aws_route_table_association" "workload_rt_association" {
 # Private (Cloud Connector) Subnet & Route Tables
 ################################################################################
 # Create subnet for CC network in X availability zones per az_count variable
-#resource "aws_subnet" "cc_subnet" {
-#  count = var.byo_subnets == false ? var.az_count : 0
+resource "aws_subnet" "cc_subnet" {
+  count = var.byo_subnets == false ? var.az_count : 0
 
-#  availability_zone = data.aws_availability_zones.available.names[count.index]
-#  cidr_block        = var.cc_subnets != null ? element(var.cc_subnets, count.index) : cidrsubnet(data.aws_vpc.vpc_selected.cidr_block, 8, count.index + 200)
-#  vpc_id            = data.aws_vpc.vpc_selected.id
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  cidr_block        = var.cc_subnets != null ? element(var.cc_subnets, count.index) : cidrsubnet(data.aws_vpc.vpc_selected.cidr_block, 8, count.index + 200)
+  vpc_id            = data.aws_vpc.vpc_selected.id
 
-#  tags = merge(var.global_tags,
-#    { Name = "${var.name_prefix}-cc-subnet-${count.index + 1}-${var.resource_tag}" }
-#  )
-#}
+  tags = merge(var.global_tags,
+    { Name = "${var.name_prefix}-cc-subnet-${count.index + 1}-${var.resource_tag}" }
+  )
+}
 
 # Or reference existing subnets
 data "aws_subnet" "cc_subnet_selected" {
