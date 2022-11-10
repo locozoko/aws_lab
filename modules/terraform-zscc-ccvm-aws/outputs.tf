@@ -8,11 +8,6 @@ output "availability_zone" {
   value       = aws_instance.cc_vm.*.availability_zone
 }
 
-output "service_eni_1" {
-  description = "Instance Device Index 1 Network ID"
-  value       = aws_network_interface.cc_vm_nic_index_1.*.id
-}
-
 output "service_eni_2" {
   description = "Instance Device Index 2 Network ID"
   value       = aws_network_interface.cc_vm_nic_index_2.*.id
@@ -36,11 +31,6 @@ output "id" {
 output "cc_service_private_ip" {
   description = "Instance Device Index 1 Private IP"
   value       = data.aws_network_interface.cc_vm_nic_index_1_eni.*.private_ip
-}
-
-output "cc_med_lrg_service_1_private_ip" {
-  description = "Instance Device Index 2 Private IP"
-  value       = data.aws_network_interface.cc_vm_nic_index_2_eni.*.private_ip
 }
 
 output "cc_med_lrg_service_2_private_ip" {

@@ -55,8 +55,6 @@ module "network" {
   global_tags       = local.global_tags
   zpa_enabled       = var.zpa_enabled
   workloads_enabled = var.workloads_enabled
-  gwlb_enabled      = var.gwlb_enabled
-  gwlb_endpoint_ids = module.gwlb_endpoint.gwlbe
   az_count          = var.az_count
   vpc_cidr          = var.vpc_cidr
   cc_subnets        = var.cc_subnets
