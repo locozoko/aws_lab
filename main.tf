@@ -81,23 +81,11 @@ data "aws_nat_gateway" "selected" {
   id = var.byo_ngw == var.byo_ngw_ids
 }
 
-
-
 # 2. Create CC network, routing, and appliance
 
 # Or reference existing subnets
 data "aws_subnet" "cc-selected" {
 id = var.byo_subnets == var.byo_subnet_ids
-}
-
-# Validation for Cloud Connector instance size and EC2 Instance Type compatibilty. A file will get generated in root path if this error gets triggered.
-resource "null_resource" "cc-error-checker" {
-  count = local.valid_cc_create ? 0 : 1 # 0 means no error is thrown, else throw error
-  provisioner "local-exec" {
-    command = <<EOF
-      echo "Cloud Connector parameters were invalid. No appliances were created. Please check the documentation and cc_instance_size / ccvm_instance_type values that were chosen" >> errorlog.txt
-EOF
-  }
 }
 
 # Create X CC VMs per cc_count which will span equally across designated availability zones per az_count
