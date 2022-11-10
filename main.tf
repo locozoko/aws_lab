@@ -68,18 +68,18 @@ data "aws_availability_zones" "available" {
 
 # Or reference an existing VPC
 data "aws_vpc" "selected" {
-  id = var.byo_vpc == false ? aws_vpc.vpc1.*.id[0] : var.byo_vpc_id
+  id = var.byo_vpc_id
 }
 
 # Or reference an existing Internet Gateway
 data "aws_internet_gateway" "selected" {
-  internet_gateway_id = var.byo_igw == false ? aws_internet_gateway.igw1.*.id[0] : var.byo_igw_id
+  internet_gateway_id = var.byo_igw_id
 }
 
 # Or reference existing NAT Gateways
 data "aws_nat_gateway" "selected" {
-  count = var.byo_ngw == false ? length(aws_nat_gateway.ngw.*.id) : length(var.byo_ngw_ids)
-  id = var.byo_ngw == false ? aws_nat_gateway.ngw.*.id[count.index] : element(var.byo_ngw_ids, count.index)
+  count = var.byo_ngw == length(var.byo_ngw_ids)
+  id = var.byo_ngw == element(var.byo_ngw_ids, count.index)
 }
 
 
@@ -88,8 +88,8 @@ data "aws_nat_gateway" "selected" {
 
 # Or reference existing subnets
 data "aws_subnet" "cc-selected" {
-count = var.byo_subnets == false ? var.az_count : length(var.byo_subnet_ids)
-id = var.byo_subnets == false ? aws_subnet.cc-subnet.*.id[count.index] : element(var.byo_subnet_ids, count.index)
+count = var.byo_subnets == length(var.byo_subnet_ids)
+id = var.byo_subnets == element(var.byo_subnet_ids, count.index)
 }
 
 # Validation for Cloud Connector instance size and EC2 Instance Type compatibilty. A file will get generated in root path if this error gets triggered.
