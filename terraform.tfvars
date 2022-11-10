@@ -16,3 +16,4 @@ byo_igw                                  = true
 byo_igw_id                               = "igw-0426242e608acde8e"
 byo_ngw                                  = true
 byo_ngw_ids                              = ["nat-01abc0907814dce42"]
+aws_region = "us-east-1"
