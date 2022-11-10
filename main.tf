@@ -53,48 +53,29 @@ module "network" {
   name_prefix       = var.name_prefix
   resource_tag      = random_string.suffix.result
   global_tags       = local.global_tags
-  workloads_enabled = true
-  cc_service_enis   = module.cc_vm.service_eni_1
+  zpa_enabled       = var.zpa_enabled
+  workloads_enabled = var.workloads_enabled
+  gwlb_enabled      = var.gwlb_enabled
+  gwlb_endpoint_ids = module.gwlb_endpoint.gwlbe
   az_count          = var.az_count
   vpc_cidr          = var.vpc_cidr
   public_subnets    = var.public_subnets
-  workloads_subnets = var.workloads_subnets
   cc_subnets        = var.cc_subnets
+  route53_subnets   = var.route53_subnets
+  #bring-your-own variables
+  byo_vpc        = var.byo_vpc
+  byo_vpc_id     = var.byo_vpc_id
+  byo_subnets    = var.byo_subnets
+  byo_subnet_ids = var.byo_subnet_ids
+  byo_igw        = var.byo_igw
+  byo_igw_id     = var.byo_igw_id
+  byo_ngw        = var.byo_ngw
+  byo_ngw_ids    = var.byo_ngw_ids
 }
 
 
 ################################################################################
-# 2. Create Bastion Host for workload and CC SSH jump access
-################################################################################
-module "bastion" {
-  source                    = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-bastion-aws"
-  name_prefix               = var.name_prefix
-  resource_tag              = random_string.suffix.result
-  global_tags               = local.global_tags
-  vpc_id                    = module.network.vpc_id
-  public_subnet             = module.network.public_subnet_ids[0]
-  instance_key              = aws_key_pair.deployer.key_name
-  bastion_nsg_source_prefix = var.bastion_nsg_source_prefix
-}
-
-
-################################################################################
-# 3. Create Workload Hosts to test traffic connectivity through CC
-################################################################################
-module "workload" {
-  workload_count = var.workload_count
-  source         = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-workload-aws"
-  name_prefix    = "${var.name_prefix}-workload"
-  resource_tag   = random_string.suffix.result
-  global_tags    = local.global_tags
-  vpc_id         = module.network.vpc_id
-  subnet_id      = module.network.workload_subnet_ids
-  instance_key   = aws_key_pair.deployer.key_name
-}
-
-
-################################################################################
-# 4. Create specified number CC VMs per cc_count which will span equally across 
+# 2. Create specified number CC VMs per cc_count which will span equally across 
 #    designated availability zones per az_count. E.g. cc_count set to 4 and 
 #    az_count set to 2 will create 2x CCs in AZ1 and 2x CCs in AZ2
 ################################################################################
@@ -139,7 +120,7 @@ module "cc_vm" {
 
 
 ################################################################################
-# 5. Create IAM Policy, Roles, and Instance Profiles to be assigned to CC. 
+# 3. Create IAM Policy, Roles, and Instance Profiles to be assigned to CC. 
 #    Default behavior will create 1 of each IAM resource per CC VM. Set variable 
 #    "reuse_iam" to true if you would like a single IAM profile created and 
 #    assigned to ALL Cloud Connectors instead.
@@ -151,11 +132,16 @@ module "cc_iam" {
   resource_tag        = random_string.suffix.result
   global_tags         = local.global_tags
   cc_callhome_enabled = var.cc_callhome_enabled
+
+  byo_iam = var.byo_iam
+  # optional inputs. only required if byo_iam set to true
+  byo_iam_instance_profile_id = var.byo_iam_instance_profile_id
+  # optional inputs. only required if byo_iam set to true
 }
 
 
 ################################################################################
-# 6. Create Security Group and rules to be assigned to CC mgmt and and service 
+# 4. Create Security Group and rules to be assigned to CC mgmt and and service 
 #    interface(s). Default behavior will create 1 of each SG resource per CC VM. 
 #    Set variable "reuse_security_group" to true if you would like a single 
 #    security group created and assigned to ALL Cloud Connectors instead.
@@ -167,6 +153,71 @@ module "cc_sg" {
   resource_tag = random_string.suffix.result
   global_tags  = local.global_tags
   vpc_id       = module.network.vpc_id
+
+  byo_security_group = var.byo_security_group
+  # optional inputs. only required if byo_security_group set to true
+  byo_mgmt_security_group_id    = var.byo_mgmt_security_group_id
+  byo_service_security_group_id = var.byo_service_security_group_id
+  # optional inputs. only required if byo_security_group set to true
+}
+
+
+################################################################################
+# 5. Create GWLB in all CC subnets/availability zones. Create a Target Group 
+#    and attach primary service IP from all created CCs as registered targets.
+################################################################################
+module "gwlb" {
+  source                   = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-gwlb-aws"
+  name_prefix              = var.name_prefix
+  resource_tag             = random_string.suffix.result
+  global_tags              = local.global_tags
+  vpc_id                   = module.network.vpc_id
+  cc_subnet_ids            = module.network.cc_subnet_ids
+  cc_small_service_ips     = module.cc_vm.cc_service_private_ip
+  cc_med_lrg_service_1_ips = module.cc_vm.cc_med_lrg_service_1_private_ip
+  cc_med_lrg_service_2_ips = module.cc_vm.cc_med_lrg_service_2_private_ip
+  cc_lrg_service_3_ips     = module.cc_vm.cc_lrg_service_3_private_ip
+  cc_instance_size         = var.cc_instance_size
+  http_probe_port          = var.http_probe_port
+  health_check_interval    = var.health_check_interval
+  healthy_threshold        = var.healthy_threshold
+  unhealthy_threshold      = var.unhealthy_threshold
+  cross_zone_lb_enabled    = var.cross_zone_lb_enabled
+}
+
+
+################################################################################
+# 6. Create a VPC Endpoint Service associated with GWLB and 1x GWLB Endpoint 
+#    per Cloud Connector subnet/availability zone.
+################################################################################
+module "gwlb_endpoint" {
+  source              = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-gwlbendpoint-aws"
+  name_prefix         = var.name_prefix
+  resource_tag        = random_string.suffix.result
+  global_tags         = local.global_tags
+  vpc_id              = module.network.vpc_id
+  subnet_ids          = module.network.cc_subnet_ids
+  gwlb_arn            = module.gwlb.gwlb_arn
+  acceptance_required = var.acceptance_required
+  allowed_principals  = var.allowed_principals
+}
+
+
+################################################################################
+# 7. Create Route 53 Resolver Rules and Endpoints for utilization with DNS 
+#    redirection to facilitate Cloud Connector ZPA service.
+#    This can optionally be enabled/disabled per variable "zpa_enabled".
+################################################################################
+module "route53" {
+  count          = var.zpa_enabled == true ? 1 : 0
+  source         = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-route53-aws"
+  name_prefix    = var.name_prefix
+  resource_tag   = random_string.suffix.result
+  global_tags    = local.global_tags
+  vpc_id         = module.network.vpc_id
+  r53_subnet_ids = module.network.route53_subnet_ids
+  domain_names   = var.domain_names
+  target_address = var.target_address
 }
 
 
