@@ -7,7 +7,6 @@ resource "random_string" "suffix" {
   special = false
 }
 
-
 ################################################################################
 # Map default tags with values to be assigned to all tagged resources
 ################################################################################
@@ -19,7 +18,6 @@ locals {
     "zs-edge-connector-cluster/${var.name_prefix}-cluster-${random_string.suffix.result}" = "shared"
   }
 }
-
 
 ################################################################################
 # The following lines generates a new SSH key pair and stores the PEM file 
@@ -42,7 +40,6 @@ resource "local_file" "private_key" {
   filename        = "../${var.name_prefix}-key-${random_string.suffix.result}.pem"
   file_permission = "0600"
 }
-
 
 ################################################################################
 # 2. Create specified number CC VMs per cc_count which will span equally across 
@@ -88,7 +85,6 @@ module "cc_vm" {
   ]
 }
 
-
 ################################################################################
 # 3. Create IAM Policy, Roles, and Instance Profiles to be assigned to CC. 
 #    Default behavior will create 1 of each IAM resource per CC VM. Set variable 
@@ -109,7 +105,6 @@ module "cc_iam" {
   # optional inputs. only required if byo_iam set to true
 }
 
-
 ################################################################################
 # 4. Create Security Group and rules to be assigned to CC mgmt and and service 
 #    interface(s). Default behavior will create 1 of each SG resource per CC VM. 
@@ -129,60 +124,4 @@ module "cc_sg" {
   byo_mgmt_security_group_id    = var.byo_mgmt_security_group_id
   byo_service_security_group_id = var.byo_service_security_group_id
   # optional inputs. only required if byo_security_group set to true
-}
-
-
-################################################################################
-# 5. Create GWLB in all CC subnets/availability zones. Create a Target Group 
-#    and attach primary service IP from all created CCs as registered targets.
-################################################################################
-module "gwlb" {
-  source                   = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-gwlb-aws"
-  name_prefix              = var.name_prefix
-  resource_tag             = random_string.suffix.result
-  global_tags              = local.global_tags
-  vpc_id                   = module.network.vpc_id
-  cc_subnet_ids            = module.network.cc_subnet_ids
-  cc_small_service_ips     = module.cc_vm.cc_service_private_ip
-  cc_med_lrg_service_1_ips = module.cc_vm.cc_med_lrg_service_1_private_ip
-  cc_med_lrg_service_2_ips = module.cc_vm.cc_med_lrg_service_2_private_ip
-  cc_lrg_service_3_ips     = module.cc_vm.cc_lrg_service_3_private_ip
-  cc_instance_size         = var.cc_instance_size
-  http_probe_port          = var.http_probe_port
-  health_check_interval    = var.health_check_interval
-  healthy_threshold        = var.healthy_threshold
-  unhealthy_threshold      = var.unhealthy_threshold
-  cross_zone_lb_enabled    = var.cross_zone_lb_enabled
-}
-
-################################################################################
-# 6. Create a VPC Endpoint Service associated with GWLB and 1x GWLB Endpoint 
-#    per Cloud Connector subnet/availability zone.
-################################################################################
-module "gwlb_endpoint" {
-  source              = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-gwlbendpoint-aws"
-  name_prefix         = var.name_prefix
-  resource_tag        = random_string.suffix.result
-  global_tags         = local.global_tags
-  vpc_id              = module.network.vpc_id
-  subnet_ids          = module.network.cc_subnet_ids
-  gwlb_arn            = module.gwlb.gwlb_arn
-  acceptance_required = var.acceptance_required
-  allowed_principals  = var.allowed_principals
-}
-
-
-################################################################################
-# Validation for Cloud Connector instance size and EC2 Instance Type 
-# compatibilty. Terraform does not have a good/native way to raise an error at 
-# the moment, so this will trigger off an invalid count value if there is an 
-# improper deployment configuration.
-################################################################################
-resource "null_resource" "cc_error_checker" {
-  count = local.valid_cc_create ? 0 : "Cloud Connector parameters were invalid. No appliances were created. Please check the documentation and cc_instance_size / ccvm_instance_type values that were chosen" # 0 means no error is thrown, else throw error
-  provisioner "local-exec" {
-    command = <<EOF
-      echo "Cloud Connector parameters were invalid. No appliances were created. Please check the documentation and cc_instance_size / ccvm_instance_type values that were chosen" >> ../errorlog.txt
-EOF
-  }
 }

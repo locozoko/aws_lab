@@ -7,37 +7,13 @@ variable "aws_region" {
 variable "name_prefix" {
   type        = string
   description = "The name prefix for all your resources"
-  default     = "zsdemo"
-}
-
-variable "vpc_cidr" {
-  type        = string
-  description = "VPC IP CIDR Range. All subnet resources that might get created (public, workload, cloud connector) are derived from this /16 CIDR. If you require creating a VPC smaller than /16, you may need to explicitly define all other subnets via public_subnets, workload_subnets, cc_subnets, and route53_subnets variables"
-  default     = "10.1.0.0/16"
-}
-
-variable "public_subnets" {
-  type        = list(string)
-  description = "Public/NAT GW Subnets to create in VPC. This is only required if you want to override the default subnets that this code creates via vpc_cidr variable."
-  default     = null
-}
-
-variable "cc_subnets" {
-  type        = list(string)
-  description = "Cloud Connector Subnets to create in VPC. This is only required if you want to override the default subnets that this code creates via vpc_cidr variable."
-  default     = null
-}
-
-variable "route53_subnets" {
-  type        = list(string)
-  description = "Route 53 Outbound Endpoint Subnets to create in VPC. This is only required if you want to override the default subnets that this code creates via vpc_cidr variable."
-  default     = null
+  default     = "zstest"
 }
 
 variable "az_count" {
   type        = number
   description = "Default number of subnets to create based on availability zone"
-  default     = 2
+  default     = 1
   validation {
     condition = (
       (var.az_count >= 1 && var.az_count <= 3)
@@ -49,7 +25,7 @@ variable "az_count" {
 variable "owner_tag" {
   type        = string
   description = "populate custom owner tag attribute"
-  default     = "zscc-admin"
+  default     = "Zoltan"
 }
 
 variable "tls_key_algorithm" {
@@ -61,13 +37,13 @@ variable "tls_key_algorithm" {
 variable "cc_count" {
   type        = number
   description = "Default number of Cloud Connector appliances to create"
-  default     = 4
+  default     = 1
 }
 
 variable "ccvm_instance_type" {
   type        = string
   description = "Cloud Connector Instance Type"
-  default     = "m5.large"
+  default     = "t3.medium"
   validation {
     condition = (
       var.ccvm_instance_type == "t3.medium" ||
@@ -97,27 +73,17 @@ variable "cc_instance_size" {
   }
 }
 
-# Validation to ensure that ccvm_instance_type and cc_instance_size are set appropriately
-locals {
-  small_cc_instance  = ["t3.medium", "m5.large", "c5.large", "c5a.large", "m5.2xlarge", "c5.2xlarge", "m5.4xlarge", "c5.4xlarge"]
-  medium_cc_instance = ["m5.2xlarge", "c5.2xlarge", "m5.4xlarge", "c5.4xlarge"]
-  large_cc_instance  = ["m5.4xlarge", "c5.4xlarge"]
-
-  valid_cc_create = (
-    contains(local.small_cc_instance, var.ccvm_instance_type) && var.cc_instance_size == "small" ||
-    contains(local.medium_cc_instance, var.ccvm_instance_type) && var.cc_instance_size == "medium" ||
-    contains(local.large_cc_instance, var.ccvm_instance_type) && var.cc_instance_size == "large"
-  )
-}
 
 variable "cc_vm_prov_url" {
   type        = string
   description = "Zscaler Cloud Connector Provisioning URL"
+  default     = "connector.zscalertwo.net/api/v1/provUrl?name=AWS"
 }
 
 variable "secret_name" {
   type        = string
   description = "AWS Secrets Manager Secret Name for Cloud Connector provisioning"
+  default     = "ZS/CC/credentials"
 }
 
 variable "http_probe_port" {
