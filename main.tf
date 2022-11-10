@@ -49,7 +49,7 @@ resource "local_file" "private_key" {
 #    child modules (vpc, igw, nat gateway, subnets, route tables)
 ################################################################################
 module "network" {
-  source            = "../../modules/terraform-zscc-network-aws"
+  source            = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-network-aws"
   name_prefix       = var.name_prefix
   resource_tag      = random_string.suffix.result
   global_tags       = local.global_tags
@@ -67,7 +67,7 @@ module "network" {
 # 2. Create Bastion Host for workload and CC SSH jump access
 ################################################################################
 module "bastion" {
-  source                    = "../../modules/terraform-zscc-bastion-aws"
+  source                    = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-bastion-aws"
   name_prefix               = var.name_prefix
   resource_tag              = random_string.suffix.result
   global_tags               = local.global_tags
@@ -83,7 +83,7 @@ module "bastion" {
 ################################################################################
 module "workload" {
   workload_count = var.workload_count
-  source         = "../../modules/terraform-zscc-workload-aws"
+  source         = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-workload-aws"
   name_prefix    = "${var.name_prefix}-workload"
   resource_tag   = random_string.suffix.result
   global_tags    = local.global_tags
@@ -116,7 +116,7 @@ resource "local_file" "user_data_file" {
 
 # Create specified number of CC appliances
 module "cc_vm" {
-  source                    = "../../modules/terraform-zscc-ccvm-aws"
+  source                    = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-ccvm-aws"
   cc_count                  = var.cc_count
   name_prefix               = var.name_prefix
   resource_tag              = random_string.suffix.result
@@ -145,7 +145,7 @@ module "cc_vm" {
 #    assigned to ALL Cloud Connectors instead.
 ################################################################################
 module "cc_iam" {
-  source              = "../../modules/terraform-zscc-iam-aws"
+  source              = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-iam-aws"
   iam_count           = var.reuse_iam == false ? var.cc_count : 1
   name_prefix         = var.name_prefix
   resource_tag        = random_string.suffix.result
@@ -161,7 +161,7 @@ module "cc_iam" {
 #    security group created and assigned to ALL Cloud Connectors instead.
 ################################################################################
 module "cc_sg" {
-  source       = "../../modules/terraform-zscc-sg-aws"
+  source       = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-sg-aws"
   sg_count     = var.reuse_security_group == false ? var.cc_count : 1
   name_prefix  = var.name_prefix
   resource_tag = random_string.suffix.result
