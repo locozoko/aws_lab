@@ -175,10 +175,10 @@ resource "aws_route_table_association" "workload_rt_association" {
 #}
 
 # Or reference existing subnets
-#data "aws_subnet" "cc_subnet_selected" {
-#  count = var.byo_subnets == false ? var.az_count : length(var.byo_subnet_ids)
-#  id    = var.byo_subnets == false ? aws_subnet.cc_subnet.*.id[count.index] : element(var.byo_subnet_ids, count.index)
-#}
+data "aws_subnet" "cc_subnet_selected" {
+  count = var.byo_subnets == false ? var.az_count : length(var.byo_subnet_ids)
+  id    = var.byo_subnets == false ? aws_subnet.cc_subnet.*.id[count.index] : element(var.byo_subnet_ids, count.index)
+}
 
 
 # Create Route Tables for CC subnets pointing to NAT Gateway resource in each AZ or however many were specified. Optionally, point directly to IGW for public deployments
