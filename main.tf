@@ -78,7 +78,7 @@ data "aws_internet_gateway" "selected" {
 
 # Or reference existing NAT Gateways
 data "aws_nat_gateway" "selected" {
-  id = var.byo_ngw == element(var.byo_ngw_ids, count.index)
+  id = var.byo_ngw == var.byo_ngw_ids
 }
 
 
@@ -87,7 +87,7 @@ data "aws_nat_gateway" "selected" {
 
 # Or reference existing subnets
 data "aws_subnet" "cc-selected" {
-id = var.byo_subnets == element(var.byo_subnet_ids, count.index)
+id = var.byo_subnets == var.byo_subnet_ids
 }
 
 # Validation for Cloud Connector instance size and EC2 Instance Type compatibilty. A file will get generated in root path if this error gets triggered.
