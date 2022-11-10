@@ -16,12 +16,6 @@ variable "vpc_cidr" {
   default     = "10.1.0.0/16"
 }
 
-variable "public_subnets" {
-  type        = list(string)
-  description = "Public/NAT GW Subnets to create in VPC. This is only required if you want to override the default subnets that this code creates via vpc_cidr variable."
-  default     = null
-}
-
 variable "cc_subnets" {
   type        = list(string)
   description = "Cloud Connector Subnets to create in VPC. This is only required if you want to override the default subnets that this code creates via vpc_cidr variable."
@@ -242,30 +236,6 @@ variable "byo_subnets" {
 variable "byo_subnet_ids" {
   type        = list(string)
   description = "User provided existing AWS Subnet IDs"
-  default     = null
-}
-
-variable "byo_igw" {
-  type        = bool
-  description = "Bring your own AWS VPC for Cloud Connector"
-  default     = false
-}
-
-variable "byo_igw_id" {
-  type        = string
-  description = "User provided existing AWS Internet Gateway ID"
-  default     = null
-}
-
-variable "byo_ngw" {
-  type        = bool
-  description = "Bring your own AWS NAT Gateway(s) Cloud Connector"
-  default     = false
-}
-
-variable "byo_ngw_ids" {
-  type        = list(string)
-  description = "User provided existing AWS NAT Gateway IDs"
   default     = null
 }
 
