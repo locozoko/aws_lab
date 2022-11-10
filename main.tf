@@ -86,7 +86,7 @@ id = var.byo_subnets == false ? aws_subnet.cc-subnet.*.id[count.index] : element
 # Create X CC VMs per cc_count which will span equally across designated availability zones per az_count
 # E.g. cc_count set to 4 and az_count set to 2 or byo_subnet_ids configured for 2 will create 2x CCs in AZ subnet 1 and 2x CCs in AZ subnet 2
 module "cc-vm" {
-  source              = "/modules/terraform-zscc-aws"
+  source              = "github.com/locozoko/zscc_tf_lab/modules/terraform-zscc-aws"
   cc_count            = var.cc_count
   name_prefix         = var.name_prefix
   resource_tag        = random_string.suffix.result
