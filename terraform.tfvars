@@ -20,7 +20,5 @@ name_prefix = "zstest-cc"
 interval = 10
 healthy_threshold = 3
 unhealthy_threshold = 3
-cc_instance_size = "small"
 iam_role_policy_smrw = "SecretsManagerReadWrite"
 iam_role_policy_ssmcore = "AmazonSSMManagedInstanceCore"
-ccvm_instance_type = "t3.medium"
