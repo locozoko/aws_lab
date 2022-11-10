@@ -61,7 +61,7 @@ data "aws_vpc" "vpc_selected" {
 #}
 
 # Create 1 NAT Gateway per Public Subnet.
-resource "aws_nat_gateway" "ngw" {
+#resource "aws_nat_gateway" "ngw" {
 #  count         = var.byo_ngw == false ? length(aws_subnet.public_subnet.*.id) : 0
 #  allocation_id = aws_eip.eip.*.id[count.index]
 #  subnet_id     = aws_subnet.public_subnet.*.id[count.index]
