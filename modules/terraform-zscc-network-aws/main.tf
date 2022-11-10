@@ -49,7 +49,6 @@ resource "aws_route_table" "workload_rt" {
     cidr_block           = "0.0.0.0/0"
     vpc_endpoint_id      = var.gwlb_enabled == true ? element(var.gwlb_endpoint_ids, count.index) : null
     network_interface_id = var.gwlb_enabled == false ? element(var.cc_service_enis, count.index) : null
-    nat_gateway_id       = var.base_only == true ? element(data.aws_nat_gateway.ngw_selected.*.id, count.index) : null
   }
 
   tags = merge(var.global_tags,

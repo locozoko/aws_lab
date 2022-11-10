@@ -31,9 +31,6 @@ ${join("\n", module.cc_vm.cc_lrg_service_3_private_ip)}
 All CC Primary Service ENIs:
 ${join("\n", module.cc_vm.service_eni_1)}
 
-All NAT GW IPs:
-${join("\n", module.network.nat_gateway_ips)}
-
 All GWLB Endpoint IDs:
 ${join("\n", module.gwlb_endpoint.gwlbe)}
 
