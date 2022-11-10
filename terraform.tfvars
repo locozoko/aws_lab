@@ -10,6 +10,7 @@ cross_zone_lb_enabled                     = true
 cc_callhome_enabled                       = false
 byo_vpc                                  = true
 byo_vpc_id                               = "vpc-040f72846563f83f3"
+byo_vpc_id                               = "vpc-040f72846563f83f3"
 byo_subnets                              = true
 byo_subnet_ids                           = ["subnet-02187be7064951f93"]
 byo_igw                                  = true
