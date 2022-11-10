@@ -59,7 +59,6 @@ module "network" {
   gwlb_endpoint_ids = module.gwlb_endpoint.gwlbe
   az_count          = var.az_count
   vpc_cidr          = var.vpc_cidr
-  public_subnets    = var.public_subnets
   cc_subnets        = var.cc_subnets
   route53_subnets   = var.route53_subnets
   #bring-your-own variables
