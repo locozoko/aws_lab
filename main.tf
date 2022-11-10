@@ -81,7 +81,6 @@ module "cc_vm" {
 
   depends_on = [
     local_file.user_data_file,
-    null_resource.cc_error_checker,
   ]
 }
 
