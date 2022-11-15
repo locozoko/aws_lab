@@ -1,0 +1,20 @@
+cc_count = 1                               = 1
+cc_vm_prov_url                             = "connector.zscalertwo.net/api/v1/provUrl?name=AWS"
+secret_name                                =  "ZS/CC/credentials"
+http_probe_port                            = 80
+#cc_callhome_enabled                        = false
+#reuse_security_group                       = true
+#reuse_iam                                  = true
+byo_vpc                                    = true
+byo_vpc_id                                 = "vpc-040f72846563f83f3"
+byo_subnets                                = true
+byo_subnet_ids                             = ["subnet-02187be7064951f93"]
+#byo_igw                                    = true
+#byo_igw_id                                 = "igw-0426242e608acde8e"
+#byo_ngw                                    = true
+#byo_ngw_ids                                = ["nat-01abc0907814dce42"]
+#byo_iam                                    = true
+#byo_iam_instance_profile_id                = ["instance-profile-1"]
+#byo_security_group                         = true
+#byo_mgmt_security_group_id                 = ["mgmt-sg-1"]
+#byo_service_security_group_id              = ["service-sg-1"]
