@@ -1,4 +1,4 @@
-cc_count = 1                               = 1
+cc_count                         = 1
 cc_vm_prov_url                             = "connector.zscalertwo.net/api/v1/provUrl?name=AWS"
 secret_name                                =  "ZS/CC/credentials"
 http_probe_port                            = 80
