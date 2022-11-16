@@ -17,4 +17,4 @@ byo_subnet_ids                             = ["subnet-02187be7064951f93"]
 #byo_security_group                         = true
 #byo_mgmt_security_group_id                 = ["mgmt-sg-1"]
 #byo_service_security_group_id              = ["service-sg-1"]
-cc_count                                    = 1
+cc_count                                    = 2
