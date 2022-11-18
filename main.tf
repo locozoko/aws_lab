@@ -20,30 +20,6 @@ locals {
   }
 }
 
-
-################################################################################
-# The following lines generates a new SSH key pair and stores the PEM file 
-# locally. The public key output is used as the instance_key passed variable 
-# to the ec2 modules for admin_ssh_key public_key authentication.
-# This is not recommended for production deployments. Please consider modifying 
-# to pass your own custom public key file located in a secure location.   
-################################################################################
-resource "tls_private_key" "key" {
-  algorithm = var.tls_key_algorithm
-}
-
-resource "aws_key_pair" "deployer" {
-  key_name   = "${var.name_prefix}-key-${random_string.suffix.result}"
-  public_key = tls_private_key.key.public_key_openssh
-}
-
-resource "local_file" "private_key" {
-  content         = tls_private_key.key.private_key_pem
-  filename        = "../${var.name_prefix}-key-${random_string.suffix.result}.pem"
-  file_permission = "0600"
-}
-
-
 ################################################################################
 # 1. Create/reference all network infrastructure resource dependencies for all 
 #    child modules (vpc, igw, nat gateway, subnets, route tables)
@@ -97,7 +73,7 @@ module "cc_vm" {
   global_tags               = local.global_tags
   mgmt_subnet_id            = module.network.cc_subnet_ids
   service_subnet_id         = module.network.cc_subnet_ids
-  instance_key              = aws_key_pair.deployer.key_name
+  instance_key              = var.instance_key
   user_data                 = local.userdata
   ccvm_instance_type        = var.ccvm_instance_type
   cc_instance_size          = var.cc_instance_size
