@@ -1,4 +1,4 @@
-cc_vm_prov_url                             = "connector.zscalertwo.net/api/v1/provUrl?name=AWSFAKE"
+cc_vm_prov_url                             = "connector.zscalertwo.net/api/v1/provUrl?name=AWS"
 secret_name                                =  "ZS/CC/credentials"
 http_probe_port                            = 80
 cc_callhome_enabled                        = true
