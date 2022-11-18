@@ -46,12 +46,6 @@ variable "owner_tag" {
   default     = "zscc-admin"
 }
 
-variable "tls_key_algorithm" {
-  type        = string
-  description = "algorithm for tls_private_key resource"
-  default     = "RSA"
-}
-
 variable "cc_count" {
   type        = number
   description = "Default number of Cloud Connector appliances to create"
@@ -163,6 +157,12 @@ variable "target_address" {
   type        = list(string)
   description = "Route 53 DNS queries will be forwarded to these Zscaler Global VIP addresses"
   default     = ["185.46.212.88", "185.46.212.89"]
+}
+
+variable "instance_key" {
+  type        = string
+  description = "Existing SSH Key pair to use for CCVM"
+  default     = "zoltan-zscaler-aws"
 }
 
 variable "workloads_enabled" {
