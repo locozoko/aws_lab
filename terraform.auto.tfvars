@@ -19,4 +19,4 @@ byo_subnet_ids                             = ["subnet-02187be7064951f93"]
 #byo_service_security_group_id              = ["service-sg-1"]
 cc_count                                    = 1
 instance_key                                = "zoltan-zscaler-aws"
-name_prefix = "value"                       = "cczlk"
+name_prefix                                 = "cczlk"
