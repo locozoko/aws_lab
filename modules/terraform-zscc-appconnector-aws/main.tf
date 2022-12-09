@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "server_appconn_ingress_self" {
   description              = "Allow all inbound to App Connectorr"
   from_port                = 0
   protocol                 = "-1"
-  security_group_id        = aws_security_group.node_sg.id
+  security_group_id        = aws_security_group.appcon_sg.id
   cidr_blocks              = ["0.0.0.0/0"]
   to_port                  = 65535
   type                     = "ingress"
