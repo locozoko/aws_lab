@@ -41,7 +41,7 @@ resource "aws_instance" "cc_vm" {
   user_data                   = base64encode(var.user_data)
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}" }
   )
 }
 
@@ -63,7 +63,7 @@ resource "aws_network_interface" "cc_vm_nic_index_1" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-${var.resource_tag}-SrvcIF1" }
+    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-SrvcIF1" }
   )
 }
 
@@ -90,7 +90,7 @@ resource "aws_network_interface" "cc_vm_nic_index_2" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-${var.resource_tag}-SrvcIF-2" }
+    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-SrvcIF-2" }
   )
 }
 
@@ -117,7 +117,7 @@ resource "aws_network_interface" "cc_vm_nic_index_3" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-${var.resource_tag}-SrvcIF-3" }
+    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-SrvcIF-3" }
   )
 }
 
@@ -144,7 +144,7 @@ resource "aws_network_interface" "cc_vm_nic_index_4" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-${var.resource_tag}-SrvcIF-4" }
+    { Name = "${var.name_prefix}-cc-vm-${count.index + 1}-SrvcIF-4" }
   )
 }
 

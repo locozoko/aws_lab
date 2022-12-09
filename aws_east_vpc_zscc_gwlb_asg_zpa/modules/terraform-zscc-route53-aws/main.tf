@@ -11,7 +11,7 @@ data "aws_security_group" "selected" {
 # Create Route 53 outbound endpoints per subnet IDs specified
 ################################################################################
 resource "aws_route53_resolver_endpoint" "zpa_r53_ep" {
-  name      = "${var.name_prefix}-r53-resolver-ep-${var.resource_tag}"
+  name      = "${var.name_prefix}-r53-resolver-ep"
   direction = "OUTBOUND"
 
   security_group_ids = [
@@ -28,7 +28,7 @@ resource "aws_route53_resolver_endpoint" "zpa_r53_ep" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-r53-resolver-ep-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-r53-resolver-ep" }
   )
 }
 
@@ -40,7 +40,7 @@ resource "aws_route53_resolver_endpoint" "zpa_r53_ep" {
 resource "aws_route53_resolver_rule" "fwd_to_cc" {
   for_each             = var.domain_names
   domain_name          = each.value
-  name                 = "${var.name_prefix}-r53-rule-${each.key}-${var.resource_tag}"
+  name                 = "${var.name_prefix}-r53-rule-${each.key}"
   rule_type            = "FORWARD"
   resolver_endpoint_id = aws_route53_resolver_endpoint.zpa_r53_ep.id
 
@@ -53,7 +53,7 @@ resource "aws_route53_resolver_rule" "fwd_to_cc" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-r53-rules-${each.key}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-r53-rules-${each.key}" }
   )
 }
 
@@ -72,11 +72,11 @@ resource "aws_route53_resolver_rule_association" "r53_rule_association_to_cc" {
 resource "aws_route53_resolver_rule" "system" {
   for_each    = var.zscaler_domains
   domain_name = each.value
-  name        = "${var.name_prefix}-r53-system-rule-${each.key}-${var.resource_tag}"
+  name        = "${var.name_prefix}-r53-system-rule-${each.key}"
   rule_type   = "SYSTEM"
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-r53-rules-${each.key}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-r53-rules-${each.key}" }
   )
 }
 

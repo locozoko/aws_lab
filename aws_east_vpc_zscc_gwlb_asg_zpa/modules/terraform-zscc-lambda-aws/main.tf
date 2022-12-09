@@ -94,7 +94,7 @@ data "aws_subnet" "cc_subnets" {
 # Create AWS Security Group and rules for Lambda
 ################################################################################
 resource "aws_security_group" "lambda_sg" {
-  name        = "${var.name_prefix}-port-probe-lambda-sg-${var.resource_tag}"
+  name        = "${var.name_prefix}-port-probe-lambda-sg"
   description = "Allow HTTP GET access to the specified port on CC"
   vpc_id      = var.vpc_id
 
@@ -118,7 +118,7 @@ resource "aws_security_group" "lambda_sg" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-lambda-sg-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-lambda-sg" }
   )
 
   depends_on = [aws_iam_role_policy_attachment.cc_lambda_execution_role_attachment]

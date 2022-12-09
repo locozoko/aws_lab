@@ -21,7 +21,7 @@ data "aws_region" "current" {}
 ################################################################################
 resource "aws_launch_template" "cc_launch_template" {
   count         = local.valid_cc_create && var.cc_instance_size == "small" ? 1 : 0
-  name          = "${var.name_prefix}-cc-launch-template-${var.resource_tag}"
+  name          = "${var.name_prefix}-cc-launch-template"
   image_id      = var.private_amis[data.aws_region.current.name]
   instance_type = var.ccvm_instance_type
   key_name      = var.instance_key
@@ -33,12 +33,12 @@ resource "aws_launch_template" "cc_launch_template" {
 
   tag_specifications {
     resource_type = "instance"
-    tags          = merge(var.global_tags, { Name = "${var.name_prefix}-ccvm-asg-${var.resource_tag}" })
+    tags          = merge(var.global_tags, { Name = "${var.name_prefix}-ccvm-asg" })
   }
 
   tag_specifications {
     resource_type = "network-interface"
-    tags          = merge(var.global_tags, { Name = "${var.name_prefix}-ccvm-nic-asg-${var.resource_tag}" })
+    tags          = merge(var.global_tags, { Name = "${var.name_prefix}-ccvm-nic-asg" })
   }
 
   network_interfaces {
@@ -65,7 +65,7 @@ resource "aws_launch_template" "cc_launch_template" {
 # Create Cloud Connector autoscaling group
 ################################################################################
 resource "aws_autoscaling_group" "cc_asg" {
-  name                      = "${var.name_prefix}-cc-asg-${var.resource_tag}"
+  name                      = "${var.name_prefix}-cc-asg"
   vpc_zone_identifier       = distinct(var.cc_subnet_ids)
   max_size                  = var.max_size
   min_size                  = var.min_size
@@ -121,7 +121,7 @@ resource "aws_autoscaling_attachment" "cc_asg_attachment_gwlb" {
 # average CPU
 ################################################################################
 resource "aws_autoscaling_policy" "cc_asg_target_tracking_policy" {
-  name                   = "${var.name_prefix}-cc-asg-target-policy-${var.resource_tag}"
+  name                   = "${var.name_prefix}-cc-asg-target-policy"
   autoscaling_group_name = aws_autoscaling_group.cc_asg.name
   policy_type            = "TargetTrackingScaling"
 
@@ -139,7 +139,7 @@ resource "aws_autoscaling_policy" "cc_asg_target_tracking_policy" {
 ################################################################################
 resource "aws_autoscaling_lifecycle_hook" "cc_asg_lifecyclehook_launch" {
   count                  = var.warm_pool_enabled == true ? 1 : 0
-  name                   = "${var.name_prefix}-cc-asg-lifecyclehook-launch-${var.resource_tag}"
+  name                   = "${var.name_prefix}-cc-asg-lifecyclehook-launch"
   autoscaling_group_name = aws_autoscaling_group.cc_asg.name
   default_result         = "CONTINUE"
   heartbeat_timeout      = var.lifecyclehook_instance_launch_wait_time
@@ -148,7 +148,7 @@ resource "aws_autoscaling_lifecycle_hook" "cc_asg_lifecyclehook_launch" {
 
 resource "aws_autoscaling_lifecycle_hook" "cc_asg_lifecyclehook_terminate" {
   count                  = var.warm_pool_enabled == true ? 1 : 0
-  name                   = "${var.name_prefix}-cc-asg-lifecyclehook-terminate-${var.resource_tag}"
+  name                   = "${var.name_prefix}-cc-asg-lifecyclehook-terminate"
   autoscaling_group_name = aws_autoscaling_group.cc_asg.name
   default_result         = "CONTINUE"
   heartbeat_timeout      = var.lifecyclehook_instance_terminate_wait_time
@@ -180,7 +180,7 @@ resource "aws_autoscaling_notification" "cc_asg_notifications" {
 ################################################################################
 resource "aws_sns_topic" "cc_asg_topic" {
   count = var.sns_enabled == true && var.byo_sns_topic == false ? 1 : 0
-  name  = "${var.name_prefix}-cc-topic-${var.resource_tag}"
+  name  = "${var.name_prefix}-cc-topic"
 }
 
 data "aws_sns_topic" "cc_asg_topic_selected" {

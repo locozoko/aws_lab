@@ -17,7 +17,7 @@ data "aws_ssm_parameter" "amazon_linux_latest" {
 # Create pre-defined AWS Security Groups and rules for Bastion
 ################################################################################
 resource "aws_security_group" "bastion" {
-  name        = "${var.name_prefix}-bastion-sg-${var.resource_tag}"
+  name        = "${var.name_prefix}-bastion-sg"
   description = "Allow SSH access to bastion host and outbound internet access"
   vpc_id      = data.aws_vpc.selected.id
 
@@ -26,7 +26,7 @@ resource "aws_security_group" "bastion" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-bastion-sg-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-bastion-sg" }
   )
 }
 
@@ -79,7 +79,7 @@ data "aws_iam_policy_document" "bastion_instance_assume_role_policy" {
 # Create Bastion IAM Role and Host/Instance Profile
 ################################################################################
 resource "aws_iam_role" "bastion_iam_role" {
-  name               = "${var.name_prefix}-bastion-iam-role-${var.resource_tag}"
+  name               = "${var.name_prefix}-bastion-iam-role"
   assume_role_policy = data.aws_iam_policy_document.bastion_instance_assume_role_policy.json
 
   tags = merge(var.global_tags)
@@ -99,7 +99,7 @@ resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
 # Assign IAM Role to Instance Profile for Bastion instance attachment
 ################################################################################
 resource "aws_iam_instance_profile" "bastion_host_profile" {
-  name = "${var.name_prefix}-bastion-host-profile-${var.resource_tag}"
+  name = "${var.name_prefix}-bastion-host-profile"
   role = aws_iam_role.bastion_iam_role.name
 
   tags = merge(var.global_tags)
@@ -133,6 +133,6 @@ resource "aws_instance" "bastion" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-bastion-host-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-bastion-host" }
   )
 }

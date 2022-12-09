@@ -18,7 +18,7 @@ data "aws_ssm_parameter" "amazon_linux_latest" {
 # Create IAM Assume Role, Policies, and Host/Instance Profiles
 ################################################################################
 resource "aws_iam_role" "node_iam_role" {
-  name = "${var.name_prefix}-node-iam-role-${var.resource_tag}"
+  name = "${var.name_prefix}-node-iam-role"
 
   assume_role_policy = <<POLICY
 {
@@ -50,7 +50,7 @@ resource "aws_iam_role_policy_attachment" "ssm_managed_instance_core" {
 # Assign IAM Role to Instance Profile for Workload instance attachment
 ################################################################################
 resource "aws_iam_instance_profile" "server_host_profile" {
-  name = "${var.name_prefix}-server_host_profile-${var.resource_tag}"
+  name = "${var.name_prefix}-server_host_profile"
   role = aws_iam_role.node_iam_role.name
 }
 
@@ -59,7 +59,7 @@ resource "aws_iam_instance_profile" "server_host_profile" {
 # Create Security Group and Rules
 ################################################################################
 resource "aws_security_group" "node_sg" {
-  name        = "${var.name_prefix}-node-sg-${var.resource_tag}"
+  name        = "${var.name_prefix}-node-sg"
   description = "Security group for all Server nodes in the cluster"
   vpc_id      = data.aws_vpc.selected.id
 
@@ -71,7 +71,7 @@ resource "aws_security_group" "node_sg" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-server-sg-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-server-sg" }
   )
 }
 
@@ -114,6 +114,6 @@ resource "aws_instance" "server_host" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-server-node${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-server-node${count.index + 1}" }
   )
 }

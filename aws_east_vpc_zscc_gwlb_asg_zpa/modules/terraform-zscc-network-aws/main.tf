@@ -17,7 +17,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_hostnames = true
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-vpc-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-vpc" }
   )
 }
 
@@ -36,7 +36,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = data.aws_vpc.vpc_selected.id
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-igw-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-igw" }
   )
 }
 
@@ -56,7 +56,7 @@ resource "aws_eip" "eip" {
   depends_on = [data.aws_internet_gateway.igw_selected]
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-eip-az${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-eip-az${count.index + 1}" }
   )
 }
 
@@ -68,7 +68,7 @@ resource "aws_nat_gateway" "ngw" {
   depends_on    = [data.aws_internet_gateway.igw_selected]
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-natgw-az${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-natgw-az${count.index + 1}" }
   )
 }
 
@@ -90,7 +90,7 @@ resource "aws_subnet" "public_subnet" {
   vpc_id            = data.aws_vpc.vpc_selected.id
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-public-subnet-${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-public-subnet-${count.index + 1}" }
   )
 }
 
@@ -106,7 +106,7 @@ resource "aws_route_table" "public_rt" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-public-rt-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-public-rt" }
   )
 }
 
@@ -130,7 +130,7 @@ resource "aws_subnet" "workload_subnet" {
   vpc_id            = data.aws_vpc.vpc_selected.id
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-workload-subnet-${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-workload-subnet-${count.index + 1}" }
   )
 }
 
@@ -146,7 +146,7 @@ resource "aws_route_table" "workload_rt" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-workload-to-cc-${count.index + 1}-rt-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-workload-to-cc-${count.index + 1}-rt" }
   )
 }
 
@@ -170,7 +170,7 @@ resource "aws_subnet" "cc_subnet" {
   vpc_id            = data.aws_vpc.vpc_selected.id
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-subnet-${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-cc-subnet-${count.index + 1}" }
   )
 }
 
@@ -191,7 +191,7 @@ resource "aws_route_table" "cc_rt" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-rt-${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-cc-rt-${count.index + 1}" }
   )
 }
 
@@ -215,7 +215,7 @@ resource "aws_subnet" "route53_subnet" {
   vpc_id            = data.aws_vpc.vpc_selected.id
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-route53-subnet-${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-route53-subnet-${count.index + 1}" }
   )
 }
 
@@ -230,7 +230,7 @@ resource "aws_route_table" "route53_rt" {
   }
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-route53-to-cc-${count.index + 1}-rt-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-route53-to-cc-${count.index + 1}-rt" }
   )
 }
 

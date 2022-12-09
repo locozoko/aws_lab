@@ -14,7 +14,7 @@ resource "aws_vpc_endpoint_service" "gwlb_vpce_service" {
   gateway_load_balancer_arns = [var.gwlb_arn]
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-cc-gwlb-vpce-service-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-cc-gwlb-vpce-service" }
   )
 }
 
@@ -30,6 +30,6 @@ resource "aws_vpc_endpoint" "gwlb_vpce" {
   vpc_id            = var.vpc_id
 
   tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-client-vpce-az${count.index + 1}-${var.resource_tag}" }
+    { Name = "${var.name_prefix}-client-vpce-az${count.index + 1}" }
   )
 }
