@@ -237,6 +237,8 @@ module "appconnector" {
   vpc_id         = module.network.vpc_id
   subnet_id      = module.network.cc_subnet_ids
   instance_key   = var.aws_keypair
+  appconnector_ami = var.appconnector_ami
+  appconnector_provurl = var.appconnector_provurl
 }
 
 ################################################################################
