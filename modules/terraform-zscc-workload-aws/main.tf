@@ -107,20 +107,7 @@ resource "aws_instance" "server_host" {
   subnet_id              = element(var.subnet_id, count.index)
   iam_instance_profile   = aws_iam_instance_profile.server_host_profile.name
   vpc_security_group_ids = [aws_security_group.node_sg.id]
-  user_data = <<-EOL
-  #!/bin/bash -xe
-  sudo sed 's/PasswordAuthentication no/PasswordAuthentication yes/' -i /etc/ssh/sshd_config
-  sudo systemctl restart sshd
-  sudo service sshd restart
-  echo 'Zscaler123!' | sudo passwd --stdin ec2-user
-  sleep 45
-  sudo yum update -y
-  sudo yum install cloud-init -y
-  sudo yum install httpd.x86_64 -y
-  sudo systemctl start httpd.service
-  sudo systemctl enable httpd.service
-  sudo echo "PS1=\"[\\u@Workload \\W]\\$ \"" >> /home/ec2-user/.bashrc
-  EOL
+
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
