@@ -226,22 +226,6 @@ module "route53" {
 }
 
 ################################################################################
-# 10. Create App Connector Hosts to test traffic connectivity through CC
-################################################################################
-module "appconnector" {
-  appconnector_count = var.appconnector_count
-  source         = "github.com/locozoko/aws_lab_east/modules/terraform-zscc-appconnector-aws"
-  name_prefix    = "${var.name_prefix}-appconnector"
-  resource_tag   = random_string.suffix.result
-  global_tags    = local.global_tags
-  vpc_id         = module.network.vpc_id
-  subnet_id      = module.network.cc_subnet_ids
-  instance_key   = var.aws_keypair
-  appconnector_ami = var.appconnector_ami
-  appconnector_provurl = var.appconnector_provurl
-}
-
-################################################################################
 # Validation for Cloud Connector instance size and EC2 Instance Type 
 # compatibilty. Terraform does not have a good/native way to raise an error at 
 # the moment, so this will trigger off an invalid count value if there is an 
