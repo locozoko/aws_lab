@@ -119,8 +119,8 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address = true
   user_data = <<-EOL
   #!/bin/bash -xe
-  yum update -y
-  "PS1=\"[\\u@bastion-east \\W]\\$ \"" >> /home/ec2-user/.bashrc
+  sudo yum update -y
+  sudo echo "PS1=\"[\\u@Bastion \\W]\\$ \"" >> /home/ec2-user/.bashrc
   EOL
 
   root_block_device {
