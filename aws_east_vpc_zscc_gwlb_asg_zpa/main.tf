@@ -21,28 +21,6 @@ locals {
 }
 
 
-################################################################################
-# The following lines generates a new SSH key pair and stores the PEM file 
-# locally. The public key output is used as the instance_key passed variable 
-# to the ec2 modules for admin_ssh_key public_key authentication.
-# This is not recommended for production deployments. Please consider modifying 
-# to pass your own custom public key file located in a secure location.   
-################################################################################
-resource "tls_private_key" "key" {
-  algorithm = var.tls_key_algorithm
-}
-
-resource "aws_key_pair" "deployer" {
-  key_name   = "${var.name_prefix}-key-${random_string.suffix.result}"
-  public_key = tls_private_key.key.public_key_openssh
-}
-
-resource "local_file" "private_key" {
-  content         = tls_private_key.key.private_key_pem
-  filename        = "../${var.name_prefix}-key-${random_string.suffix.result}.pem"
-  file_permission = "0600"
-}
-
 
 ################################################################################
 # 1. Create/reference all network infrastructure resource dependencies for all 
@@ -76,7 +54,7 @@ module "bastion" {
   global_tags               = local.global_tags
   vpc_id                    = module.network.vpc_id
   public_subnet             = module.network.public_subnet_ids[0]
-  instance_key              = aws_key_pair.deployer.key_name
+  instance_key              = var.aws_key_pair
   bastion_nsg_source_prefix = var.bastion_nsg_source_prefix
 }
 
@@ -92,7 +70,7 @@ module "workload" {
   global_tags    = local.global_tags
   vpc_id         = module.network.vpc_id
   subnet_id      = module.network.workload_subnet_ids
-  instance_key   = aws_key_pair.deployer.key_name
+  instance_key   = var.aws_key_pair
 }
 
 
@@ -126,7 +104,7 @@ module "cc_asg" {
   cc_subnet_ids             = module.network.cc_subnet_ids
   ccvm_instance_type        = var.ccvm_instance_type
   cc_instance_size          = var.cc_instance_size
-  instance_key              = aws_key_pair.deployer.key_name
+  instance_key              = var.aws_key_pair
   user_data                 = local.userdata
   iam_instance_profile      = module.cc_iam.iam_instance_profile_id
   mgmt_security_group_id    = module.cc_sg.mgmt_security_group_id
