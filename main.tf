@@ -27,7 +27,7 @@ locals {
 #    child modules (vpc, igw, nat gateway, subnets, route tables)
 ################################################################################
 module "network" {
-  source            = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-network-aws"
+  source            = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-network-aws"
   name_prefix       = var.name_prefix
   resource_tag      = random_string.suffix.result
   global_tags       = local.global_tags
@@ -48,7 +48,7 @@ module "network" {
 # 2. Create Bastion Host for workload and CC SSH jump access
 ################################################################################
 module "bastion" {
-  source                    = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-bastion-aws"
+  source                    = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-bastion-aws"
   name_prefix               = var.name_prefix
   resource_tag              = random_string.suffix.result
   global_tags               = local.global_tags
@@ -64,7 +64,7 @@ module "bastion" {
 ################################################################################
 module "workload" {
   workload_count = var.workload_count
-  source         = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-workload-aws"
+  source         = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-workload-aws"
   name_prefix    = "${var.name_prefix}-workload"
   resource_tag   = random_string.suffix.result
   global_tags    = local.global_tags
@@ -97,7 +97,7 @@ resource "local_file" "user_data_file" {
 
 # Create the specified CC VMs via Launch Template and Autoscaling Group
 module "cc_asg" {
-  source                    = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-asg-aws"
+  source                    = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-asg-aws"
   name_prefix               = var.name_prefix
   resource_tag              = random_string.suffix.result
   global_tags               = local.global_tags
@@ -147,7 +147,7 @@ module "cc_asg" {
 #    assigned to ALL Cloud Connectors instead.
 ################################################################################
 module "cc_iam" {
-  source              = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-iam-aws"
+  source              = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-iam-aws"
   iam_count           = 1
   name_prefix         = var.name_prefix
   resource_tag        = random_string.suffix.result
@@ -164,7 +164,7 @@ module "cc_iam" {
 #    security group created and assigned to ALL Cloud Connectors instead.
 ################################################################################
 module "cc_sg" {
-  source       = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-sg-aws"
+  source       = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-sg-aws"
   sg_count     = 1
   name_prefix  = var.name_prefix
   resource_tag = random_string.suffix.result
@@ -178,7 +178,7 @@ module "cc_sg" {
 #    used by cc_asg module to auto associate instances
 ################################################################################
 module "gwlb" {
-  source                = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-gwlb-aws"
+  source                = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-gwlb-aws"
   name_prefix           = var.name_prefix
   resource_tag          = random_string.suffix.result
   global_tags           = local.global_tags
@@ -198,7 +198,7 @@ module "gwlb" {
 #    per Cloud Connector subnet/availability zone.
 ################################################################################
 module "gwlb_endpoint" {
-  source              = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-gwlbendpoint-aws"
+  source              = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-gwlbendpoint-aws"
   name_prefix         = var.name_prefix
   resource_tag        = random_string.suffix.result
   global_tags         = local.global_tags
@@ -215,7 +215,7 @@ module "gwlb_endpoint" {
 #    redirection to facilitate Cloud Connector ZPA service.
 ################################################################################
 module "route53" {
-  source         = "github.com/locozoko/aws_lab/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-route53-aws"
+  source         = "github.com/locozoko/aws_lab_east/aws_east_vpc_zscc_gwlb_asg_zpa/modules/terraform-zscc-route53-aws"
   name_prefix    = var.name_prefix
   resource_tag   = random_string.suffix.result
   global_tags    = local.global_tags
