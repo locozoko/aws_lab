@@ -225,6 +225,19 @@ module "route53" {
   target_address = var.target_address
 }
 
+################################################################################
+# 10. Create App Connector Hosts to test traffic connectivity through CC
+################################################################################
+module "appconnector" {
+  appconnector_count = var.appconnector_count
+  source         = "github.com/locozoko/aws_lab_east/modules/terraform-zscc-appconnector-aws"
+  name_prefix    = "${var.name_prefix}-appconnector"
+  resource_tag   = random_string.suffix.result
+  global_tags    = local.global_tags
+  vpc_id         = module.network.vpc_id
+  subnet_id      = module.network.cc_subnet_ids
+  instance_key   = var.aws_keypair
+}
 
 ################################################################################
 # Validation for Cloud Connector instance size and EC2 Instance Type 
