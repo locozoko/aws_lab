@@ -54,7 +54,7 @@ module "bastion" {
   global_tags               = local.global_tags
   vpc_id                    = module.network.vpc_id
   public_subnet             = module.network.public_subnet_ids[0]
-  instance_key              = var.aws_key_pair
+  instance_key              = var.aws_keypair
   bastion_nsg_source_prefix = var.bastion_nsg_source_prefix
 }
 
@@ -70,7 +70,7 @@ module "workload" {
   global_tags    = local.global_tags
   vpc_id         = module.network.vpc_id
   subnet_id      = module.network.workload_subnet_ids
-  instance_key   = var.aws_key_pair
+  instance_key   = var.aws_keypair
 }
 
 
@@ -104,7 +104,7 @@ module "cc_asg" {
   cc_subnet_ids             = module.network.cc_subnet_ids
   ccvm_instance_type        = var.ccvm_instance_type
   cc_instance_size          = var.cc_instance_size
-  instance_key              = var.aws_key_pair
+  instance_key              = var.aws_keypair
   user_data                 = local.userdata
   iam_instance_profile      = module.cc_iam.iam_instance_profile_id
   mgmt_security_group_id    = module.cc_sg.mgmt_security_group_id

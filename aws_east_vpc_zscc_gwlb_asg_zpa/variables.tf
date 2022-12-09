@@ -4,6 +4,11 @@ variable "aws_region" {
   default     = "us-west-2"
 }
 
+variable "aws_keypair" {
+  type        = string
+  description = "The EC2 Key Pair"
+}
+
 variable "name_prefix" {
   type        = string
   description = "The name prefix for all your resources"
@@ -62,12 +67,6 @@ variable "owner_tag" {
   type        = string
   description = "populate custom owner tag attribute"
   default     = "zscc-admin"
-}
-
-variable "tls_key_algorithm" {
-  type        = string
-  description = "algorithm for tls_private_key resource"
-  default     = "RSA"
 }
 
 variable "bastion_nsg_source_prefix" {

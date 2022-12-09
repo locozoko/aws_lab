@@ -29,4 +29,4 @@ sns_email_list                             = ["zkovacs@zscaler.com"]
 #byo_sns_topic_name                         = "topic-name"
 cc_instance_size                           = "small"
 name_prefix                                = "ZLAB"
-aws_key_pair                               = "zoltan-zscaler-aws"
+aws_keypair                              = "zoltan-zscaler-aws"
