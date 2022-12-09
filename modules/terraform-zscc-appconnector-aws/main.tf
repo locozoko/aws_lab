@@ -65,12 +65,3 @@ systemctl stop zpa-connector
 systemctl start zpa-connector
 EOF
 }
-  
-  metadata_options {
-    http_endpoint = "enabled"
-    http_tokens   = "required"
-  }
-
-  tags = merge(var.global_tags,
-    { Name = "${var.name_prefix}-server-appconn${count.index + 1}-${var.resource_tag}" }
-  )
