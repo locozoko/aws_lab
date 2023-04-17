@@ -1,17 +1,4 @@
 ################################################################################
-# Map default tags with values to be assigned to all tagged resources
-################################################################################
-locals {
-  global_tags = {
-    Owner                                                                                = var.owner_tag
-    ManagedBy                                                                            = "terraform"
-    Vendor                                                                               = "Zscaler"
-    "zs-app-connector-cluster/${var.name_prefix}-cluster-${random_string.suffix.result}" = "shared"
-  }
-}
-
-
-################################################################################
 # The following lines generates a new SSH key pair and stores the PEM file
 # locally. The public key output is used as the instance_key passed variable
 # to the ec2 modules for admin_ssh_key public_key authentication.
