@@ -15,7 +15,7 @@ locals {
   global_tags = {
     Owner                                                                                 = "Zoltan"
     ManagedBy                                                                             = "terraform"
-    Vendor                                                                                = "Zscaler"
+    Vendor                                                                                = "Zscaler-Lab"
     "zs-edge-connector-cluster/${var.name_prefix}-cluster-${random_string.suffix.result}" = "shared"
   }
 }
