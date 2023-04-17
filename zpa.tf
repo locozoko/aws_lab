@@ -1,14 +1,4 @@
 ################################################################################
-# Generate a unique random string for resource name assignment and key pair
-################################################################################
-resource "random_string" "suffix" {
-  length  = 8
-  upper   = false
-  special = false
-}
-
-
-################################################################################
 # Map default tags with values to be assigned to all tagged resources
 ################################################################################
 locals {
