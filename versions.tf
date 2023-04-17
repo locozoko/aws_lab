@@ -30,5 +30,5 @@ provider "aws" {
   region = var.aws_region
 }
 
-provider "zpa" {
+provider "zscaler/zpa" {
 }
