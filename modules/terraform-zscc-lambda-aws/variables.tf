@@ -1,7 +1,7 @@
 variable "name_prefix" {
   type        = string
   description = "A prefix to associate to all Cloud Connector Lambda module resources"
-  default     = null
+  default     = "ZLAB"
 }
 
 variable "resource_tag" {

@@ -1,7 +1,7 @@
 variable "name_prefix" {
   type        = string
   description = "A prefix to associate to all the Cloud Connector IAM module resources"
-  default     = null
+  default     = "ZLAB"
 }
 
 variable "resource_tag" {
@@ -14,12 +14,6 @@ variable "global_tags" {
   type        = map(string)
   description = "Populate any custom user defined tags from a map"
   default     = {}
-}
-
-variable "iam_role_policy_smrw" {
-  type        = string
-  description = "Cloud Connector EC2 Instance predefined IAM Role to access Secrets Manager resources"
-  default     = "SecretsManagerReadWrite"
 }
 
 variable "iam_count" {
@@ -46,8 +40,7 @@ variable "byo_iam_instance_profile_id" {
   default     = null
 }
 
-variable "asg_enabled" {
-  type        = bool
-  description = "Determines whether or not to create the cc_autoscale_lifecycle_policy IAM Policy and attach it to the CC IAM Role"
-  default     = false
+variable "secret_name" {
+  type        = string
+  description = "AWS Secrets Manager Secret Name for Cloud Connector provisioning"
 }

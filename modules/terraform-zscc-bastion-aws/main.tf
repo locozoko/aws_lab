@@ -117,6 +117,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids      = [aws_security_group.bastion.id]
   iam_instance_profile        = aws_iam_instance_profile.bastion_host_profile.name
   associate_public_ip_address = true
+
   root_block_device {
     volume_size           = var.disk_size
     delete_on_termination = true
