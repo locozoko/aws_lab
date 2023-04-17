@@ -25,26 +25,26 @@ resource "local_file" "private_key" {
 # 1. Create/reference all network infrastructure resource dependencies for all
 #    child modules (vpc, igw, nat gateway, subnets, route tables)
 ################################################################################
-module "network" {
-  source                      = "github.com/locozoko/aws_lab_east/modules/terraform-zsac-network-aws"
-  name_prefix                 = var.name_prefix
-  resource_tag                = random_string.suffix.result
-  global_tags                 = local.global_tags
-  az_count                    = var.az_count
-  vpc_cidr                    = var.vpc_cidr
-  public_subnets              = var.public_subnets
-  ac_subnets                  = var.ac_subnets
-  associate_public_ip_address = var.associate_public_ip_address
-  #bring-your-own variables
-  byo_vpc        = var.byo_vpc
-  byo_vpc_id     = var.byo_vpc_id
-  byo_subnets    = var.byo_subnets
-  byo_subnet_ids = var.byo_subnet_ids
-  byo_igw        = var.byo_igw
-  byo_igw_id     = var.byo_igw_id
-  byo_ngw        = var.byo_ngw
-  byo_ngw_ids    = var.byo_ngw_ids
-}
+#module "network" {
+#  source                      = "github.com/locozoko/aws_lab_east/modules/terraform-zsac-network-aws"
+#  name_prefix                 = var.name_prefix
+#  resource_tag                = random_string.suffix.result
+#  global_tags                 = local.global_tags
+#  az_count                    = var.az_count
+#  vpc_cidr                    = var.vpc_cidr
+#  public_subnets              = var.public_subnets
+#  ac_subnets                  = var.ac_subnets
+#  associate_public_ip_address = var.associate_public_ip_address
+#  #bring-your-own variables
+#  byo_vpc        = var.byo_vpc
+#  byo_vpc_id     = var.byo_vpc_id
+#  byo_subnets    = var.byo_subnets
+#  byo_subnet_ids = var.byo_subnet_ids
+#  byo_igw        = var.byo_igw
+#  byo_igw_id     = var.byo_igw_id
+#  byo_ngw        = var.byo_ngw
+#  byo_ngw_ids    = var.byo_ngw_ids
+#}
 
 
 ################################################################################
@@ -115,7 +115,7 @@ APPUSERDATA
 }
 
 # Write the file to local filesystem for storage/reference
-resource "local_file" "user_data_file" {
+resource "local_file" "user_data_file2" {
   count    = var.use_zscaler_ami == true ? 1 : 0
   content  = local.appuserdata
   filename = "../user_data"
