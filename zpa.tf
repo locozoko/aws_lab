@@ -49,7 +49,7 @@ resource "local_file" "private_key" {
 #    child modules (vpc, igw, nat gateway, subnets, route tables)
 ################################################################################
 module "network" {
-  source                      = "../../modules/terraform-zsac-network-aws"
+  source                      = "github.com/locozoko/aws_lab_east/modules/terraform-zsac-network-aws"
   name_prefix                 = var.name_prefix
   resource_tag                = random_string.suffix.result
   global_tags                 = local.global_tags
@@ -75,7 +75,7 @@ module "network" {
 ################################################################################
 module "zpa_app_connector_group" {
   count                                        = var.byo_provisioning_key == true ? 0 : 1 # Only use this module if a new provisioning key is needed
-  source                                       = "../../modules/terraform-zpa-app-connector-group"
+  source                                       = "github.com/locozoko/aws_lab_east/modules/terraform-zpa-app-connector-group"
   app_connector_group_name                     = "${var.aws_region}-${module.network.vpc_id}"
   app_connector_group_description              = "${var.app_connector_group_description}-${var.aws_region}-${module.network.vpc_id}"
   app_connector_group_enabled                  = var.app_connector_group_enabled
@@ -95,7 +95,7 @@ module "zpa_app_connector_group" {
 # 3. Create ZPA Provisioning Key (or reference existing if byo set)
 ################################################################################
 module "zpa_provisioning_key" {
-  source                            = "../../modules/terraform-zpa-provisioning-key"
+  source                            = "github.com/locozoko/aws_lab_east/modules/terraform-zpa-provisioning-key"
   enrollment_cert                   = var.enrollment_cert
   provisioning_key_name             = "${var.aws_region}-${module.network.vpc_id}"
   provisioning_key_enabled          = var.provisioning_key_enabled
@@ -224,7 +224,7 @@ locals {
 # Create specified number of AC appliances
 ################################################################################
 module "ac_vm" {
-  source                      = "../../modules/terraform-zsac-acvm-aws"
+  source                      = "github.com/locozoko/aws_lab_east/modules/terraform-zsac-acvm-aws"
   ac_count                    = var.ac_count
   name_prefix                 = var.name_prefix
   resource_tag                = random_string.suffix.result
@@ -253,7 +253,7 @@ module "ac_vm" {
 #    assigned to ALL App Connectors instead.
 ################################################################################
 module "ac_iam" {
-  source       = "../../modules/terraform-zsac-iam-aws"
+  source       = "github.com/locozoko/aws_lab_east/modules/terraform-zsac-iam-aws"
   iam_count    = var.reuse_iam == false ? var.ac_count : 1
   name_prefix  = var.name_prefix
   resource_tag = random_string.suffix.result
@@ -273,7 +273,7 @@ module "ac_iam" {
 #    security group created and assigned to ALL App Connectors instead.
 ################################################################################
 module "ac_sg" {
-  source       = "../../modules/terraform-zsac-sg-aws"
+  source       = "github.com/locozoko/aws_lab_east/modules/terraform-zsac-sg-aws"
   sg_count     = var.reuse_security_group == false ? var.ac_count : 1
   name_prefix  = var.name_prefix
   resource_tag = random_string.suffix.result
