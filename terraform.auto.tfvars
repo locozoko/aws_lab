@@ -1,18 +1,19 @@
 domain_names = {
   appseg1 = "ikovacs.com"
   appseg2 = "ikovacs.lab"
+  appseg3 = "mrpicklez.net"
 }
-cc_vm_prov_url                             = "https://connector.zscalertwo.net/api/v1/provUrl?name=AWS"
+cc_vm_prov_url                             = "connector.zscalertwo.net/api/v1/provUrl?name=ZLAB"
 secret_name                                =  "ZS/CC/credentials"
 http_probe_port                            = 50000
 aws_region                                 = "us-east-1"
 ccvm_instance_type                         = "m5.large"
 az_count                                   = 1
 min_size                                   = 2
-max_size                                   = 4
-health_check_grace_period                  = 900
-vpc_cidr                                   = "10.1.0.0/16"
-workload_count                             = 4
+max_size                                   = 2
+health_check_grace_period                  = 1000
+vpc_cidr                                   = "10.0.0.0/16"
+workload_count                             = 2
 owner_tag                                  = "Zoltan"
 cc_callhome_enabled                        = true
 cross_zone_lb_enabled                      = true
@@ -31,6 +32,6 @@ cc_instance_size                           = "small"
 name_prefix                                = "ZLAB"
 aws_keypair                                = "zoltan-zscaler-aws"
 #appconnector_type                          = "t3.small"
-#appconnector_count                         = "2"
+#appconnector_count                         = "1"
 #appconnector_ami                           = "ami-0c404a000c15a0328"
-#appconnector_provurl                       = "2|api.private.zscaler.com|Mfe9VUSVMycC+l9+wJNORaeiEKmJ8on7JNeItQqTJQ2ZN1CVHogXHN+aYBrJKkqoGO9J1VMdSfQVy4ayutxrufLvouaHb9n+KK7Zr4RBa+o27M2UkgGD7oIMjWO2Bt+FaU1qOI5GGoYzbwuvOUnVtWWAA9xcG1QQ2FPOkRPaTcsKv6sk4aWladhjaeXysERdTzmaGyd9SMXwyzWhyQUu4BLMCfa/1wKrj3V6gLKbPyzgfz1AQ2qq0r95K8zDZQlfNqpCj1dMlOCzmHt1jf+9QGjpdq2oIuKIrhDM0JMdkE6nQtMHtq5ZQtbf/HRwl7a6iAZ1NBKf2FFzU40+pNtvnIpQzbQaDb3jHMdeWTZz2aIGuiVeooLjkxSGieKEi4w9"
+#appconnector_provurl                       = "2|api.private.zscaler.com|Opm1VDNXY3RbBM7v9wya4BYVjZDQdtxNsqcH9ZYoDHcxAa7FCFFya9g+whhN4s4MwwP/TnrxZuXUAW9TGTSZHXzCCsvKlRBQBtI6bg7IOAV7K04mrU5Dnn4g1jAm9yW4WLNWusvfe1JxfDXqj5UIHZ7gcHcKg/aJAKPjCFgjhXtSGTM++8sBNRAf1onNYM+iilXX5v+CDkLQGgB8158J3vvTBRv90DNeJKCl52dtcEF+Gz+axqIFottZ28pPXeJ7XfqtapJzLTDONPU7+s/qlztH5IKPwRafTVlPUjy+VP3s78ZxypYHr68TP2Y4A3k97dgaLmbWBFHe02boqLwcmbzwRZ5C55kzivHD0b9GkbKvY2XxBKbVt28RFqZhE52Z"

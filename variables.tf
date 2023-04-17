@@ -1,18 +1,19 @@
 variable "aws_region" {
   type        = string
   description = "The AWS region."
-  default     = "us-west-2"
+  default     = "us-east-1"
 }
 
 variable "aws_keypair" {
   type        = string
   description = "The EC2 Key Pair"
+  default     = "zoltan-zscaler-aws"
 }
 
 variable "name_prefix" {
   type        = string
   description = "The name prefix for all your resources"
-  default     = "zsdemo"
+  default     = "ZLAB"
 }
 
 variable "vpc_cidr" {
